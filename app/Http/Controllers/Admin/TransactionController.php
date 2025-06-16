@@ -1,0 +1,221 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Transaction;
+use App\Models\Account;
+use App\Models\TransactionDetail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+class TransactionController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $transactions = Transaction::with('details.account')
+            ->orderBy('transaction_date', 'desc')
+            ->paginate(10);
+        return view('admin.transactions.index', compact('transactions'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $accounts = Account::where('is_active', true)->orderBy('code')->get();
+        return view('admin.transactions.create', compact('accounts'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'transaction_date' => 'required|date',
+            'reference_number' => 'required|unique:transactions',
+            'description' => 'required',
+            'type' => 'required|in:general,cash_in,cash_out',
+            'details' => 'required|array|min:2',
+            'details.*.account_id' => 'required|exists:accounts,id',
+            'details.*.debit_amount' => 'required_without:details.*.credit_amount|numeric|min:0',
+            'details.*.credit_amount' => 'required_without:details.*.debit_amount|numeric|min:0',
+            'details.*.description' => 'nullable'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $transaction = Transaction::create([
+                'transaction_date' => $validated['transaction_date'],
+                'reference_number' => $validated['reference_number'],
+                'description' => $validated['description'],
+                'type' => $validated['type'],
+                'total_amount' => collect($validated['details'])->sum('debit_amount')
+            ]);
+
+            foreach ($validated['details'] as $detail) {
+                $transaction->details()->create($detail);
+            }
+
+            if (!$transaction->validateBalance()) {
+                throw new \Exception('Total debit dan kredit tidak sama');
+            }
+
+            DB::commit();
+            return redirect()->route('admin.transactions.index')
+                ->with('success', 'Transaksi berhasil disimpan');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Transaksi gagal disimpan: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Transaction $transaction)
+    {
+        $transaction->load('details.account');
+        return view('admin.transactions.show', compact('transaction'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Transaction $transaction)
+    {
+        if ($transaction->type !== 'general') {
+            return back()->with('error', 'Hanya transaksi umum yang dapat diedit');
+        }
+
+        $accounts = Account::where('is_active', true)->orderBy('code')->get();
+        $transaction->load('details');
+        return view('admin.transactions.edit', compact('transaction', 'accounts'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Transaction $transaction)
+    {
+        if ($transaction->type !== 'general') {
+            return back()->with('error', 'Hanya transaksi umum yang dapat diedit');
+        }
+
+        $validated = $request->validate([
+            'transaction_date' => 'required|date',
+            'description' => 'required',
+            'details' => 'required|array|min:2',
+            'details.*.account_id' => 'required|exists:accounts,id',
+            'details.*.debit_amount' => 'required_without:details.*.credit_amount|numeric|min:0',
+            'details.*.credit_amount' => 'required_without:details.*.debit_amount|numeric|min:0',
+            'details.*.description' => 'nullable'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $transaction->update([
+                'transaction_date' => $validated['transaction_date'],
+                'description' => $validated['description']
+            ]);
+
+            $transaction->details()->delete();
+            foreach ($validated['details'] as $detail) {
+                $transaction->details()->create($detail);
+            }
+
+            if (!$transaction->validateBalance()) {
+                throw new \Exception('Total debit dan kredit tidak sama');
+            }
+
+            DB::commit();
+            return redirect()->route('admin.transactions.index')
+                ->with('success', 'Transaksi berhasil diperbarui');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Transaksi gagal diperbarui: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Transaction $transaction)
+    {
+        if ($transaction->type !== 'general') {
+            return back()->with('error', 'Hanya transaksi umum yang dapat dihapus');
+        }
+
+        DB::beginTransaction();
+        try {
+            $transaction->details()->delete();
+            $transaction->delete();
+            DB::commit();
+
+            return redirect()->route('admin.transactions.index')
+                ->with('success', 'Transaksi berhasil dihapus');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Transaksi gagal dihapus: ' . $e->getMessage());
+        }
+    }
+
+    public function ledger(Account $account, Request $request)
+    {
+        $year = $request->get('year', date('Y'));
+        $month = $request->get('month');
+
+        // Hitung saldo awal
+        $saldoAwal = TransactionDetail::join('transactions', 'transaction_details.transaction_id', '=', 'transactions.id')
+            ->where('transaction_details.account_id', $account->id)
+            ->where(function($q) use ($year, $month) {
+                if ($month) {
+                    $q->whereYear('transactions.transaction_date', $year)
+                      ->whereMonth('transactions.transaction_date', '<', $month);
+                } else {
+                    $q->whereYear('transactions.transaction_date', '<', $year);
+                }
+            })
+            ->select(DB::raw('SUM(transaction_details.debit_amount - transaction_details.credit_amount) as total'))
+            ->value('total') ?? 0;
+
+        // Ambil transaksi untuk periode yang dipilih
+        $query = TransactionDetail::join('transactions', 'transaction_details.transaction_id', '=', 'transactions.id')
+            ->where('transaction_details.account_id', $account->id)
+            ->whereYear('transactions.transaction_date', $year);
+
+        if ($month) {
+            $query->whereMonth('transactions.transaction_date', $month);
+        }
+
+        $transactions = $query->select(
+                'transactions.transaction_date',
+                'transactions.transaction_number',
+                'transactions.description',
+                'transaction_details.debit_amount',
+                'transaction_details.credit_amount'
+            )
+            ->orderBy('transactions.transaction_date')
+            ->get();
+
+        // Hitung saldo berjalan
+        $saldo = $saldoAwal;
+        foreach ($transactions as $transaction) {
+            $transaction->saldo = $saldo + ($transaction->debit_amount - $transaction->credit_amount);
+            $saldo = $transaction->saldo;
+        }
+
+        if ($request->has('export')) {
+            $pdf = PDF::loadView('admin.transactions.ledger-pdf', compact('account', 'transactions', 'saldoAwal', 'year', 'month'));
+            return $pdf->download('buku-besar-' . $account->code . '-' . $year . ($month ? '-' . $month : '') . '.pdf');
+        }
+
+        return view('admin.transactions.ledger', compact('account', 'transactions', 'saldoAwal', 'year', 'month'));
+    }
+}
