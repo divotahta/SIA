@@ -57,7 +57,7 @@
                                 @forelse($transactions as $transaction)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $transaction->transaction_date->format('d/m/Y') }}
+                                            {{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d/m/Y') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ $transaction->transaction_number }}

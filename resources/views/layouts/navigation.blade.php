@@ -69,6 +69,16 @@
                         </svg>
                         Transaksi
                     </a>
+                    <a href="{{ route('admin.ledger.index') }}"
+                        class="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md transition-all duration-200 {{ request()->routeIs('admin.ledger.*') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                        <svg class="mr-4 h-6 w-6 transition-colors duration-200 {{ request()->routeIs('admin.ledger.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 10h16M4 14h10M4 18h6" />
+                        </svg>
+                        Buku Besar
+                    </a>
+
 
                     <div class="space-y-1">
                         <button type="button" @click="submenuOpen = !submenuOpen"
@@ -129,6 +139,18 @@
                         </svg>
                         Transaksi
                     </a>
+                    <a href="{{ route('staff.ledger.index') }}"
+                        class="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md transition-all duration-200 {{ request()->routeIs('admin.ledger.*') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                        <svg class="mr-4 h-6 w-6 transition-colors duration-200 {{ request()->routeIs('admin.ledger.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 10h16M4 14h10M4 18h6" />
+                        </svg>
+                        Buku Besar
+                    </a>
+
+
+
 
                     <div class="space-y-1">
                         <button type="button" @click="submenuOpen = !submenuOpen"

@@ -212,7 +212,7 @@ class TransactionController extends Controller
 
         $transactions = $query->select(
             'transactions.transaction_date',
-            'transactions.transaction_number',
+            'transactions.reference_number',
             'transactions.description',
             'transaction_details.debit_amount',
             'transaction_details.credit_amount'

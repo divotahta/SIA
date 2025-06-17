@@ -6,8 +6,10 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Admin\AccountController as AdminAccountController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
+use App\Http\Controllers\Admin\LedgerController as AdminLedgerController;
 use App\Http\Controllers\Staff\TransactionController as StaffTransactionController;
 use App\Http\Controllers\Staff\ReportController as StaffReportController;
+use App\Http\Controllers\Staff\LedgerController as StaffLedgerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,6 +39,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('staff/reports/income-statement', [StaffReportController::class, 'incomeStatement'])->name('staff.reports.income-statement');
         Route::get('staff/reports/balance-sheet', [StaffReportController::class, 'balanceSheet'])->name('staff.reports.balance-sheet');
         Route::get('staff/reports/cash-flow', [StaffReportController::class, 'cashFlow'])->name('staff.reports.cash-flow');
+
+        // Staff Ledger
+        Route::get('staff/ledger', [StaffLedgerController::class, 'index'])->name('staff.ledger.index');
+        Route::get('staff/ledger/{account}', [StaffLedgerController::class, 'show'])->name('staff.ledger.show');
     });
 
     // Routes untuk Admin
@@ -68,6 +74,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('admin/reports/income-statement', [AdminReportController::class, 'incomeStatement'])->name('admin.reports.income-statement');
         Route::get('admin/reports/balance-sheet', [AdminReportController::class, 'balanceSheet'])->name('admin.reports.balance-sheet');
         Route::get('admin/reports/cash-flow', [AdminReportController::class, 'cashFlow'])->name('admin.reports.cash-flow');
+
+        // Admin Ledger
+        Route::get('admin/ledger', [AdminLedgerController::class, 'index'])->name('admin.ledger.index');
+        Route::get('admin/ledger/{account}', [AdminLedgerController::class, 'show'])->name('admin.ledger.show');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
