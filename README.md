@@ -54,7 +54,6 @@ Sistem Informasi Akuntansi untuk Usaha Mikro, Kecil, dan Menengah (UMKM) yang me
   - Admin
   - Staff
 - Fitur profil pengguna
-- Manajemen hak akses
 
 
 ## Instalasi
