@@ -38,7 +38,7 @@ class TransactionController extends Controller
             'transaction_date' => 'required|date',
             'reference_number' => 'required|unique:transactions',
             'description' => 'required',
-            'type' => 'required|in:general,cash_in,cash_out',
+            'type' => 'required|in:general,adjustment,closing',
             'details' => 'required|array|min:2',
             'details.*.account_id' => 'required|exists:accounts,id',
             'details.*.debit_amount' => 'required_without:details.*.credit_amount|numeric|min:0',

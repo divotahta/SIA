@@ -20,7 +20,7 @@ class TransactionSeeder extends Seeder
                 'transaction_date' => now(),
                 'reference_number' => 'TRX-' . date('Ymd') . '-001',
                 'description' => 'Setoran modal awal',
-                'type' => 'cash_in',
+                'type' => 'general',
                 'total_amount' => 100000000
             ]);
 
@@ -50,7 +50,7 @@ class TransactionSeeder extends Seeder
                 'transaction_date' => now(),
                 'reference_number' => 'TRX-' . date('Ymd') . '-002',
                 'description' => 'Pembelian peralatan kantor',
-                'type' => 'cash_out',
+                'type' => 'general',
                 'total_amount' => 15000000
             ]);
 
@@ -79,7 +79,7 @@ class TransactionSeeder extends Seeder
                 'transaction_date' => now(),
                 'reference_number' => 'TRX-' . date('Ymd') . '-003',
                 'description' => 'Pendapatan jasa konsultasi',
-                'type' => 'cash_in',
+                'type' => 'general',
                 'total_amount' => 5000000
             ]);
 

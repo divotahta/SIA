@@ -69,6 +69,25 @@
                         </svg>
                         Transaksi
                     </a>
+                    {{-- <a href="{{ route('admin.adjustments.index') }}"
+                        class="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md transition-all duration-200 {{ request()->routeIs('admin.adjustment.index') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                        <svg class="mr-4 h-6 w-6 transition-colors duration-200 {{ request()->routeIs('admin.adjustment.index') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 1.343-3 3v4m0 0h6m-6 0H9a2 2 0 01-2-2v-4a4 4 0 014-4h1a4 4 0 014 4v4a2 2 0 01-2 2h-1z" />
+                        </svg>
+                        Jurnal Penyesuaian
+                    </a> --}}
+
+                    {{-- <a href="{{ route('admin.closings.index') }}"
+                        class="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md transition-all duration-200 {{ request()->routeIs('admin.closings.index') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                        <svg class="mr-4 h-6 w-6 transition-colors duration-200 {{ request()->routeIs('admin.closings.index') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Jurnal Penutup
+                    </a> --}}
                     <a href="{{ route('admin.ledger.index') }}"
                         class="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md transition-all duration-200 {{ request()->routeIs('admin.ledger.*') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                         <svg class="mr-4 h-6 w-6 transition-colors duration-200 {{ request()->routeIs('admin.ledger.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"
@@ -139,6 +158,27 @@
                         </svg>
                         Transaksi
                     </a>
+                    {{-- <a href="{{ route('staff.transactions.adjustment') }}"
+                        class="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md transition-all duration-200 {{ request()->routeIs('staff.transactions.adjustment') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                        <svg class="mr-4 h-6 w-6 transition-colors duration-200 {{ request()->routeIs('staff.transactions.adjustment') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 1.343-3 3v4m0 0h6m-6 0H9a2 2 0 01-2-2v-4a4 4 0 014-4h1a4 4 0 014 4v4a2 2 0 01-2 2h-1z" />
+                        </svg>
+                        Jurnal Penyesuaian
+                    </a> --}}
+
+                    {{-- <a href="{{ route('staff.transactions.closing') }}"
+                        class="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md transition-all duration-200 {{ request()->routeIs('staff.transactions.closing') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                        <svg class="mr-4 h-6 w-6 transition-colors duration-200 {{ request()->routeIs('staff.transactions.closing') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Jurnal Penutup
+                    </a> --}}
+
+
                     <a href="{{ route('staff.ledger.index') }}"
                         class="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md transition-all duration-200 {{ request()->routeIs('admin.ledger.*') ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                         <svg class="mr-4 h-6 w-6 transition-colors duration-200 {{ request()->routeIs('admin.ledger.*') ? 'text-white' : 'text-gray-400 group-hover:text-white' }}"

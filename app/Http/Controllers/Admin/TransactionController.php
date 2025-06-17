@@ -16,13 +16,27 @@ class TransactionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $transactions = Transaction::with('details.account')
-            ->orderBy('transaction_date', 'desc')
-            ->paginate(10);
+        $query = Transaction::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('reference_number', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        $transactions = $query->orderByDesc('transaction_date')->paginate(10)->withQueryString();
+
         return view('admin.transactions.index', compact('transactions'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -38,19 +52,19 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         // dd($request->all());
         $validated = $request->validate([
             'transaction_date' => 'required|date',
             'description' => 'nullable',
-            'type' => 'required|in:general,cash_in,cash_out',
+            'type' => 'required|in:general,adjustment,closing',
             'details' => 'required|array',
             'details.*.account_id' => 'required|exists:accounts,id',
             'details.*.debit_amount' => 'required_without:details.*.credit_amount|numeric|min:0',
             'details.*.credit_amount' => 'required_without:details.*.debit_amount|numeric|min:0',
             'details.*.description' => 'nullable'
         ]);
-        
+
 
 
         DB::beginTransaction();
@@ -106,9 +120,9 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        if ($transaction->type !== 'general') {
-            return back()->with('error', 'Hanya transaksi umum yang dapat diedit');
-        }
+        // if ($transaction->type !== 'general') {
+        //     return back()->with('error', 'Hanya transaksi umum yang dapat diedit');
+        // }
 
         $accounts = Account::where('is_active', true)->orderBy('code')->get();
         $transaction->load('details');
@@ -120,14 +134,14 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        if ($transaction->type !== 'general') {
-            return back()->with('error', 'Hanya transaksi umum yang dapat diedit');
-        }
+        // if ($transaction->type !== 'general') {
+        //     return back()->with('error', 'Hanya transaksi umum yang dapat diedit');
+        // }
         // dd($request->all());
 
         $validated = $request->validate([
             'transaction_date' => 'required|date',
-            'type' => 'required|in:general,cash_in,cash_out',
+            'type' => 'required|in:general,adjustment,closing',
             'description' => 'nullable',
             'details' => 'required|array',
             'details.*.account_id' => 'required|exists:accounts,id',

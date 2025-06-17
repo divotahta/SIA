@@ -29,8 +29,8 @@
                         <select name="type" id="type"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             <option value="general" {{ old('type') == 'general' ? 'selected' : '' }}>Umum</option>
-                            <option value="cash_in" {{ old('type') == 'cash_in' ? 'selected' : '' }}>Masuk</option>
-                            <option value="cash_out" {{ old('type') == 'cash_out' ? 'selected' : '' }}>Keluar</option>
+                            <option value="adjustment" {{ old('type') == 'adjustment' ? 'selected' : '' }}>Penyesuaian</option>
+                            <option value="closing" {{ old('type') == 'closing' ? 'selected' : '' }}>Penutup</option>
                         </select>
                         @error('type')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

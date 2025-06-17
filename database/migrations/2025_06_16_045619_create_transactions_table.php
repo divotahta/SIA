@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('reference_number')->unique();
             $table->text('description')->nullable();
             $table->decimal('total_amount', 15, 2)->default(0);
-            $table->enum('type', ['general', 'cash_in', 'cash_out'])->default('general');
+            $table->enum('type', ['general', 'adjustment', 'closing'])->default('general');
             $table->timestamps();
         });
 

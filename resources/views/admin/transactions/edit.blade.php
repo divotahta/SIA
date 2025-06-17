@@ -36,11 +36,11 @@
                                     <option value="general"
                                         {{ old('type', $transaction->type) == 'general' ? 'selected' : '' }}>Umum
                                     </option>
-                                    <option value="cash_in"
-                                        {{ old('type', $transaction->type) == 'cash_in' ? 'selected' : '' }}>Masuk
+                                    <option value="adjustment"
+                                        {{ old('type', $transaction->type) == 'adjustment' ? 'selected' : '' }}>adjustment
                                     </option>
-                                    <option value="cash_out"
-                                        {{ old('type', $transaction->type) == 'cash_out' ? 'selected' : '' }}>Keluar
+                                    <option value="closing"
+                                        {{ old('type', $transaction->type) == 'closing' ? 'selected' : '' }}>Closing
                                     </option>
                                 </select>
                                 @error('type')

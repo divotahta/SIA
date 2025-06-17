@@ -18,10 +18,10 @@ class DashboardController extends Controller
         $totalTransactions = Transaction::count();
         $totalJournals = TransactionDetail::count();
         $todayTransactions = Transaction::whereDate('transaction_date', today())->count();
-        $totalIncome = Transaction::where('type', 'cash_in')->sum('total_amount');
-        $totalExpense = Transaction::where('type', 'cash_out')->sum('total_amount');
-        $totalBalance = $totalIncome - $totalExpense;
-        $totalBalance = $totalBalance > 0 ? $totalBalance : 0;
+        // $totalIncome = Transaction::where('type', 'cash_in')->sum('total_amount');
+        // $totalExpense = Transaction::where('type', 'cash_out')->sum('total_amount');
+        // $totalBalance = $totalIncome - $totalExpense;
+        // $totalBalance = $totalBalance > 0 ? $totalBalance : 0;
 
 
         // Mengambil 10 transaksi terakhir
@@ -36,9 +36,9 @@ class DashboardController extends Controller
             'totalJournals',
             'todayTransactions',
             'latestTransactions',
-            'totalIncome',
-            'totalExpense',
-            'totalBalance'
+            // 'totalIncome',
+            // 'totalExpense',
+            // 'totalBalance'
         ));
     }
 } 

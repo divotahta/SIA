@@ -58,10 +58,9 @@
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ \Carbon\Carbon::parse($transaction->transaction_date)->format('d/m/Y') }}
-
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $transaction->reference_number }}
+                                            {{ $transaction->transaction_number }}
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-900">
                                             {{ $transaction->description }}

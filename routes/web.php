@@ -1,16 +1,23 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\Admin\AccountController as AdminAccountController;
-use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
-use App\Http\Controllers\Admin\ReportController as AdminReportController;
-use App\Http\Controllers\Admin\LedgerController as AdminLedgerController;
-use App\Http\Controllers\Staff\TransactionController as StaffTransactionController;
-use App\Http\Controllers\Staff\ReportController as StaffReportController;
-use App\Http\Controllers\Staff\LedgerController as StaffLedgerController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TransactionController;
+// use App\Http\Controllers\Staff\AdjustmentController;
+use App\Http\Controllers\Staff\AdjustmentController;
+use App\Http\Controllers\Admin\LedgerController as AdminLedgerController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
+use App\Http\Controllers\Staff\LedgerController as StaffLedgerController;
+use App\Http\Controllers\Staff\ReportController as StaffReportController;
+use App\Http\Controllers\Admin\AccountController as AdminAccountController;
+use App\Http\Controllers\Admin\ClosingController as AdminClosingController;
+use App\Http\Controllers\Staff\ClosingController as StaffClosingController;
+use App\Http\Controllers\Admin\AdjustmentController as AdminAdjustmentController;
+
+use App\Http\Controllers\Staff\AdjustmentController as StaffAdjustmentController;
+use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
+use App\Http\Controllers\Staff\TransactionController as StaffTransactionController;
 
 Route::get('/', function () {
     return view('home');
@@ -68,6 +75,8 @@ Route::middleware(['auth'])->group(function () {
             'update' => 'admin.transactions.update',
             'destroy' => 'admin.transactions.destroy',
         ]);
+
+        
         Route::get('admin/accounts/{account}/ledger', [AdminTransactionController::class, 'ledger'])->name('admin.accounts.ledger');
 
         // Admin Reports
@@ -89,12 +98,17 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     // ... existing admin routes ...
+
+    // Jurnal Penyesuaian
+
 });
 
 // Staff Routes
 Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Staff\DashboardController::class, 'index'])->name('dashboard');
     // ... existing staff routes ...
+
+   
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
