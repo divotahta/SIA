@@ -27,14 +27,20 @@
                 </div>
 
                 <div class="mb-4">
+                    <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi</label>
+                    <textarea name="description" id="description" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('description') }}</textarea>
+                    @error('description')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
                     <label for="category" class="block text-sm font-medium text-gray-700">Kategori</label>
-                    <select name="category" id="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                    <select name="category_id" id="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
                         <option value="">Pilih Kategori</option>
-                        <option value="asset" {{ old('category') == 'asset' ? 'selected' : '' }}>asset</option>
-                        <option value="liability" {{ old('category') == 'liability' ? 'selected' : '' }}>liability</option>
-                        <option value="equity" {{ old('category') == 'equity' ? 'selected' : '' }}>equity</option>
-                        <option value="revenue" {{ old('category') == 'revenue' ? 'selected' : '' }}>revenue</option>
-                        <option value="expense" {{ old('category') == 'expense' ? 'selected' : '' }}>expense</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                        @endforeach
                     </select>
                     @error('category')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

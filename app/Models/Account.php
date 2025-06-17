@@ -37,7 +37,7 @@ class Account extends Model
         $debit = $this->transactionDetails()->sum('debit_amount');
         $credit = $this->transactionDetails()->sum('credit_amount');
 
-        if (in_array($this->type, ['asset', 'expense'])) {
+        if (in_array($this->category->code, ['1', '2'])) {
             return $debit - $credit;
         }
 

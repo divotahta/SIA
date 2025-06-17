@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Account;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\AccountCategory;
+use App\Http\Controllers\Controller;
+use App\Models\TransactionDetail;
 
 class AccountController extends Controller
 {
@@ -16,9 +18,10 @@ class AccountController extends Controller
     {
         $accounts = Account::with('category')
             ->orderBy('code')
-            ->paginate(10);
+            ->paginate(20);
+        $categories = AccountCategory::orderBy('name')->get();
 
-        return view('admin.accounts.index', compact('accounts'));
+        return view('admin.accounts.index', compact('accounts', 'categories'));
     }
 
     /**
@@ -53,7 +56,9 @@ class AccountController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $account = Account::find($id);
+        $transactions = TransactionDetail::where('account_id', $account->id)->get();
+        return view('admin.accounts.show', compact('account', 'transactions'));
     }
 
     /**
@@ -70,6 +75,14 @@ class AccountController extends Controller
      */
     public function update(Request $request, Account $account)
     {
+        if ($account->category->code == '1' || $account->category->code == '2') {
+            return back()->with('error', 'Akun aset dan kewajiban tidak dapat diubah.');
+        }
+
+        if ($account->transactionDetails()->exists()) {
+            return back()->with('error', 'Akun tidak dapat diubah karena masih digunakan dalam transaksi.');
+        }
+
         $validated = $request->validate([
             'code' => 'required|unique:accounts,code,' . $account->id,
             'name' => 'required',

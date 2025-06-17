@@ -18,11 +18,16 @@ class DashboardController extends Controller
         $totalTransactions = Transaction::count();
         $totalJournals = TransactionDetail::count();
         $todayTransactions = Transaction::whereDate('transaction_date', today())->count();
-        
-        // Mengambil 5 transaksi terakhir
+        $totalIncome = Transaction::where('type', 'cash_in')->sum('total_amount');
+        $totalExpense = Transaction::where('type', 'cash_out')->sum('total_amount');
+        $totalBalance = $totalIncome - $totalExpense;
+        $totalBalance = $totalBalance > 0 ? $totalBalance : 0;
+
+
+        // Mengambil 10 transaksi terakhir
         $latestTransactions = Transaction::with('details')
             ->latest()
-            ->take(5)
+            ->take(10)
             ->get();
 
         return view('admin.dashboard', compact(
@@ -30,7 +35,10 @@ class DashboardController extends Controller
             'totalTransactions',
             'totalJournals',
             'todayTransactions',
-            'latestTransactions'
+            'latestTransactions',
+            'totalIncome',
+            'totalExpense',
+            'totalBalance'
         ));
     }
 } 

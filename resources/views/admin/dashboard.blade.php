@@ -29,21 +29,45 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-4">
+                <div class="bg-yellow-100 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold text-yellow-800">Total Saldo</h3>
+                    <p class="text-2xl font-bold text-yellow-600">Rp {{ number_format($totalBalance, 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-green-100 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold text-green-800">Total Pendapatan</h3>
+                    <p class="text-2xl font-bold text-green-600">Rp {{ number_format($totalIncome, 0, ',', '.') }}</p>
+                </div>
+                <div class="bg-orange-100 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold text-orange-800">Total Pengeluaran</h3>
+                    <p class="text-2xl font-bold text-orange-600">Rp {{ number_format($totalExpense, 0, ',', '.') }}</p>
+                </div>
+            </div>
+
             <div class="mt-8">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Transaksi Terbaru</h3>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Transaksi</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Tanggal</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    No. Transaksi</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Deskripsi</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Total</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($latestTransactions as $transaction)
-                                <tr>
+                            @foreach ($latestTransactions as $transaction)
+                                <tr onclick="window.location='{{ route('admin.transactions.show', $transaction->id) }}'"
+                                    class="cursor-pointer hover:bg-gray-100 transition duration-200">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $transaction->transaction_date->format('d/m/Y') }}
                                     </td>
@@ -58,10 +82,11 @@
                                     </td>
                                 </tr>
                             @endforeach
+
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout> 
+</x-app-layout>

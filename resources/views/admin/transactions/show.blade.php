@@ -51,7 +51,13 @@
                                        ($transaction->type === 'cash_in' ? 'bg-green-100 text-green-800' : 
                                        ($transaction->type === 'cash_out' ? 'bg-red-100 text-red-800' : 
                                        'bg-gray-100 text-gray-800')) }}">
-                                    {{ ucfirst($transaction->type) }}
+                                    @if ($transaction->type === 'cash_in')
+                                        Masuk
+                                    @elseif ($transaction->type === 'cash_out')
+                                        Keluar
+                                    @else
+                                        Umum
+                                    @endif
                                 </span>
                             </dd>
                         </div>

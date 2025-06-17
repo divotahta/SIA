@@ -37,22 +37,24 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($latestTransactions as $transaction)
-                                <tr>
+                            @foreach ($latestTransactions as $transaction)
+                                <tr onclick="window.location='{{ route('staff.transactions.show', $transaction->id) }}'"
+                                    class="cursor-pointer hover:bg-gray-100 transition duration-200">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $transaction->transaction_date->format('d/m/Y') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $transaction->transaction_number }}
+                                        {{ $transaction->reference_number }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {{ $transaction->description }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        Rp {{ number_format($transaction->details->sum('debit'), 0, ',', '.') }}
+                                        Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}
                                     </td>
                                 </tr>
                             @endforeach
+
                         </tbody>
                     </table>
                 </div>
